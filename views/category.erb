@@ -1,0 +1,8 @@
+<p> Name: <%= @category["name"] %> </p>
+
+<a href="<%=@category["id"]%>/edit"> Edit this category.</a><br>
+<a href="/categories"> Back to categories page</a><br><br>
+<form action="/categories/<%= @category["id"] %>/destroy" method="post">
+    <input type="submit" name="" value="Delete this category">
+</form>
+
