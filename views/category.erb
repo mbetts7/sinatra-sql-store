@@ -1,3 +1,4 @@
+<div class="container">
 <p> Name: <%= @category["name"] %> </p><br>
 <p> Products in this category: </p>
 <% @list_prod.each do |product| %>
@@ -9,4 +10,4 @@
 <form action="/categories/<%= @category["id"] %>/destroy" method="post">
     <input type="submit" name="" value="Delete this category">
 </form>
-
+</div>

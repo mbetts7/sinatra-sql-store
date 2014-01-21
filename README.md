@@ -5,8 +5,8 @@ Your company has a working interface written with Sinatra and SQL to manage a li
 We need a new feature: categories.  
 
 # Products should be in many categories, and categories should have many products.  
-# The manager should be able to create and delete categories.
-# The manager should be able to see all categories
+X# The manager should be able to create and delete categories.
+X# The manager should be able to see all categories
 # The manager should be able to go to a category's page and view all the products in that category.
 # The manager should be able to go to a product's page and view all the categories that product is in.
 # From a product's edit form page, he should also be able to add and remove category memberships for that product.
