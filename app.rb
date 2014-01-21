@@ -4,7 +4,7 @@ require 'sinatra/reloader'
 require 'pg'
 
 def dbname
-  "storeadminsite"
+  "store_db"
 end
 
 def with_db
@@ -88,9 +88,10 @@ def create_products_table
   c.exec %q{
   CREATE TABLE products (
     id SERIAL PRIMARY KEY,
-    name varchar(255),
-    price decimal,
-    description text
+    name VARCHAR(255),
+    price DECIMAL,
+    description TEXT,
+    category_id INTEGER,
   );
   }
   c.close
@@ -117,6 +118,33 @@ def seed_products_table
   c = PGconn.new(:host => "localhost", :dbname => dbname)
   products.each do |p|
     c.exec_params("INSERT INTO products (name, price, description) VALUES ($1, $2, $3);", p)
+  end
+  c.close
+end
+
+def create_categories_table
+  c = PGconn.new(:host => "localhost", :dbname => dbname)
+  c.exec %q{
+  CREATE TABLE categories (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255)
+  );
+  }
+  c.close
+end
+
+def drop_categories_table
+  c = PGconn.new(:host => "localhost", :dbname => dbname)
+  c.exec "DROP TABLE categories;"
+  c.close
+end
+
+def seed_categories_table
+  categories = [["misc"], ["metal"],["plastic"],["leather"],["rubber"]]
+
+  c = PGconn.new(:host => "localhost", :dbname => dbname)
+  categories.each do |p|
+    c.exec_params("INSERT INTO categories (name) VALUES ($1);", p)
   end
   c.close
 end

@@ -13,9 +13,10 @@ We need a new feature: categories.
 
 Build this new functionality starting from the sinatra app for products in app.rb and views/.  Use the current functionality as a guide where possible.
 
-You'll need to create the database from psql with `CREATE DATABASE <dbname>`.  Make sure the database in your postgres server has the same name as dbname in the app.rb.
+xYou'll need to create the database from psql with `CREATE DATABASE <dbname>`.  Make sure the database in your postgres server has the same name as dbname in the app.rb.
 
 You can run the table creation methods by requiring 'app.rb' and running the methods from pry.
+# do this... require './app'
 
 If you create the database, run `create_products_table`, then run `seed_products_table`, you'll get some seed data for the products.  Writing some data of your own for the categories might be helpful.
 
