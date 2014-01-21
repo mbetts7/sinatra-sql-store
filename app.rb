@@ -136,6 +136,12 @@ end
 get '/products/:id' do
   c = PGconn.new(:host => "localhost", :dbname => dbname)
   @product = c.exec_params("SELECT * FROM products WHERE products.id = $1;", [params[:id]]).first
+  @list_cat = c.exec_params("SELECT c.name FROM categories AS c 
+    INNER JOIN prod_cat AS pc 
+    ON c.id=pc.category_id 
+    INNER JOIN products AS p 
+    ON p.id=pc.product_id
+    WHERE pc.product_id = $1;", [params[:id]])
   c.close
   erb :product
 end
@@ -144,7 +150,12 @@ end
 get '/categories/:id' do
   c = PGconn.new(:host => "localhost", :dbname => dbname)
   @category = c.exec_params("SELECT * FROM categories WHERE categories.id = $1;", [params[:id]]).first
-  # @list_prod = c.exec_params("SELECT * FROM products WHERE categories.id = $1;", [params[:id]]).first
+  @list_prod = c.exec_params("SELECT p.name FROM products AS p 
+    INNER JOIN prod_cat AS pc 
+    ON p.id=pc.product_id 
+    INNER JOIN categories AS c 
+    ON c.id=pc.category_id
+    WHERE pc.category_id = $1;", [params[:id]])
   c.close
   erb :category
 end

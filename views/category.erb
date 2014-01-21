@@ -1,4 +1,8 @@
-<p> Name: <%= @category["name"] %> </p>
+<p> Name: <%= @category["name"] %> </p><br>
+<p> Products in this category: </p>
+<% @list_prod.each do |product| %>
+<li> <%= product["name"] %> </li>
+<% end %>
 
 <a href="<%=@category["id"]%>/edit"> Edit this category.</a><br>
 <a href="/categories"> Back to categories page</a><br><br>
