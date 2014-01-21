@@ -148,6 +148,8 @@ get '/categories/:id' do
   erb :category
 end
 
+# PRODUCT TABLES !!!
+
 def create_products_table
   c = PGconn.new(:host => "localhost", :dbname => dbname)
   c.exec %q{
@@ -187,6 +189,8 @@ def seed_products_table
   c.close
 end
 
+# CATEGORY TABLES !!!
+
 def create_categories_table
   c = PGconn.new(:host => "localhost", :dbname => dbname)
   c.exec %q{
@@ -210,6 +214,42 @@ def seed_categories_table
   c = PGconn.new(:host => "localhost", :dbname => dbname)
   categories.each do |p|
     c.exec_params("INSERT INTO categories (name) VALUES ($1);", p)
+  end
+  c.close
+end
+
+# PROD CAT TABLES !!!
+def create_prod_cat_table
+  c = PGconn.new(:host => "localhost", :dbname => dbname)
+  c.exec %q{
+  CREATE TABLE prod_cat (
+    id SERIAL PRIMARY KEY,
+    product_id INTEGER,
+    category_id INTEGER
+  );
+  }
+  c.close
+end
+
+def seed_prod_cat_table
+  matches = [
+    [1,2],
+    [2,5],
+    [3,1],
+    [4,3],
+    [5,1],
+    [6,2],
+    [7,2],
+    [8,2],
+    [9,3],
+    [1,1],
+    [2,1],
+    [3,1],
+    [9,2]]
+
+  c = PGconn.new(:host => "localhost", :dbname => dbname)
+  matches.each do |p|
+    c.exec_params("INSERT INTO prod_cat (product_id, category_id) VALUES ($1, $2);", p)
   end
   c.close
 end
