@@ -29,9 +29,24 @@ get '/products' do
   erb :products
 end
 
+#BETTS Get the index of categories
+get '/categories' do
+  c = PGconn.new(:host => "localhost", :dbname => dbname)
+
+  # Get all rows from the products table.
+  @categories = c.exec_params("SELECT * FROM categories;")
+  c.close
+  erb :categories
+end
+
 # Get the form for creating a new product
 get '/products/new' do
   erb :new_product
+end
+
+#BETTS Get the form for creating a new category
+get '/categories/new' do
+  erb :new_categories
 end
 
 # POST to create a new product
@@ -47,6 +62,21 @@ post '/products' do
   new_product_id = c.exec_params("SELECT currval('products_id_seq');").first["currval"]
   c.close
   redirect "/products/#{new_product_id}"
+end
+
+#BETTS POST to create a new category
+post '/categories' do
+  c = PGconn.new(:host => "localhost", :dbname => dbname)
+
+  # Insert the new row into the categories table.
+  c.exec_params("INSERT INTO categories (name) VALUES ($1)",
+                  [params["name"]])
+
+  # Assuming you created your products table with "id SERIAL PRIMARY KEY",
+  # This will get the id of the product you just created.
+  new_category_id = c.exec_params("SELECT currval('categories_id_seq');").first["currval"]
+  c.close
+  redirect "/categories/#{new_category_id}"
 end
 
 # Update a product
@@ -66,6 +96,24 @@ get '/products/:id/edit' do
   c.close
   erb :edit_product
 end
+
+#BETTS Update a category
+post '/categories/:id' do
+  c = PGconn.new(:host => "localhost", :dbname => dbname)
+
+  # Update the product.
+  c.exec_params("UPDATE categories SET (name) = ($2) WHERE categories.id = $1 ",[params["id"], params["name"]])
+  c.close
+  redirect "/categories/#{params["id"]}"
+end
+
+get '/categories/:id/edit' do
+  c = PGconn.new(:host => "localhost", :dbname => dbname)
+  @category = c.exec_params("SELECT * FROM categories WHERE categories.id = $1", [params["id"]]).first
+  c.close
+  erb :edit_category
+end
+
 # DELETE to delete a product
 post '/products/:id/destroy' do
 
@@ -75,12 +123,29 @@ post '/products/:id/destroy' do
   redirect '/products'
 end
 
+# DELETE to delete a category
+post '/categories/:id/destroy' do
+
+  c = PGconn.new(:host => "localhost", :dbname => dbname)
+  c.exec_params("DELETE FROM categories WHERE categories.id = $1", [params["id"]])
+  c.close
+  redirect '/categories'
+end
+
 # GET the show page for a particular product
 get '/products/:id' do
   c = PGconn.new(:host => "localhost", :dbname => dbname)
   @product = c.exec_params("SELECT * FROM products WHERE products.id = $1;", [params[:id]]).first
   c.close
   erb :product
+end
+
+#BETTS GET the show page for a particular category
+get '/categories/:id' do
+  c = PGconn.new(:host => "localhost", :dbname => dbname)
+  @category = c.exec_params("SELECT * FROM categories WHERE categories.id = $1;", [params[:id]]).first
+  c.close
+  erb :category
 end
 
 def create_products_table
