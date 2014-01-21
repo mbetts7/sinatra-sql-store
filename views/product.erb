@@ -1,8 +1,9 @@
 <p> Name: <%= @product["name"] %> </p>
 <p> Price: <%= @product["price"] %></p>
-<p> <%= @product["description"] %></p>
+<p> Description: <%= @product["description"] %></p>
 
-<a href="<%=@product["id"]%>/edit"> Edit this product.</a>
+<a href="<%=@product["id"]%>/edit"> Edit this product.</a><br>
+<a href="/products"> Back to products page</a><br><br>
 <form action="/products/<%= @product["id"] %>/destroy" method="post">
     <input type="submit" name="" value="Delete this product.">
 </form>

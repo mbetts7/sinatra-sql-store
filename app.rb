@@ -144,6 +144,7 @@ end
 get '/categories/:id' do
   c = PGconn.new(:host => "localhost", :dbname => dbname)
   @category = c.exec_params("SELECT * FROM categories WHERE categories.id = $1;", [params[:id]]).first
+  # @list_prod = c.exec_params("SELECT * FROM products WHERE categories.id = $1;", [params[:id]]).first
   c.close
   erb :category
 end
