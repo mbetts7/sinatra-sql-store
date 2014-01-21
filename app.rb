@@ -86,6 +86,14 @@ post '/products/:id' do
   # Update the product.
   c.exec_params("UPDATE products SET (name, price, description) = ($2, $3, $4) WHERE products.id = $1 ",
                 [params["id"], params["name"], params["price"], params["description"]])
+
+  # Remove category.
+  c.exec_params("UPDATE FROM prod_cat WHERE prod_cat.id = $1 ",
+                [params["id"]])
+
+  # Add category.
+  c.exec_params("INSERT INTO prod_cat (product_id, category_id) VALUES ($1, $2);", [[products.id], [categories.id]])
+  
   c.close
   redirect "/products/#{params["id"]}"
 end
@@ -93,6 +101,21 @@ end
 get '/products/:id/edit' do
   c = PGconn.new(:host => "localhost", :dbname => dbname)
   @product = c.exec_params("SELECT * FROM products WHERE products.id = $1", [params["id"]]).first
+  
+  @list_cat = c.exec_params("SELECT c.name FROM categories AS c 
+    INNER JOIN prod_cat AS pc 
+    ON c.id=pc.category_id 
+    INNER JOIN products AS p 
+    ON p.id=pc.product_id
+    WHERE pc.product_id = $1;", [params[:id]])
+
+  @list_cat_avail = c.exec_params("SELECT DISTINCT c.name FROM categories AS c 
+    INNER JOIN prod_cat AS pc 
+    ON c.id=pc.category_id 
+    INNER JOIN products AS p 
+    ON p.id=pc.product_id
+    WHERE pc.product_id <> $1;", [params[:id]])
+
   c.close
   erb :edit_product
 end
@@ -146,7 +169,6 @@ get '/products/:id' do
   erb :product
 end
 
-#BETTS GET the show page for a particular category
 get '/categories/:id' do
   c = PGconn.new(:host => "localhost", :dbname => dbname)
   @category = c.exec_params("SELECT * FROM categories WHERE categories.id = $1;", [params[:id]]).first
@@ -159,8 +181,6 @@ get '/categories/:id' do
   c.close
   erb :category
 end
-
-# PRODUCT TABLES !!!
 
 def create_products_table
   c = PGconn.new(:host => "localhost", :dbname => dbname)
@@ -200,8 +220,6 @@ def seed_products_table
   end
   c.close
 end
-
-# CATEGORY TABLES !!!
 
 def create_categories_table
   c = PGconn.new(:host => "localhost", :dbname => dbname)

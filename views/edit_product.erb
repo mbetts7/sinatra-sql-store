@@ -17,11 +17,23 @@
 
   <p>
     <label>Remove Category:</label>
-    <textarea name="description"><%= @product["description"]%></textarea>
-  </p>
+      <% @list_cat.each do |category| %>
+        <button>Remove category: <%= category["name"] %></button>
+      <% end %>
+  </p><br>
 
   <p>
-    <input type="submit" name="" value="Edit the product.">
+    <label>Add Category:</label>
+    <select>
+      <% @list_cat_avail.each do |category| %>
+        <option><%= category["name"] %></option>
+      <% end %>
+    </select>
+  </p><br>
+
+
+  <p>
+    <input type="submit" name="" value="Confirm product edits">
   </p>
 </form>
 </div>
