@@ -2,10 +2,11 @@
 <p> Name: <%= @product["name"] %> </p>
 <p> Price: <%= @product["price"] %></p>
 <p> Description: <%= @product["description"] %></p>
-<p> Categories for this product: </p>
+<p> Categories for this product: 
 <% @list_cat.each do |category| %>
 <li> <%= category["name"] %> </li>
 <% end %>
+</p>
 
 <a href="<%=@product["id"]%>/edit"> Edit this product.</a><br>
 <a href="/products"> Back to products page</a><br><br>

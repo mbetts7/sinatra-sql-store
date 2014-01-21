@@ -88,11 +88,10 @@ post '/products/:id' do
                 [params["id"], params["name"], params["price"], params["description"]])
 
   # Remove category.
-  c.exec_params("UPDATE FROM prod_cat WHERE prod_cat.id = $1 ",
-                [params["id"]])
+  # c.exec_params("UPDATE FROM prod_cat WHERE prod_cat.id = $1 ",[params["id"]])
 
   # Add category.
-  c.exec_params("INSERT INTO prod_cat (product_id, category_id) VALUES ($1, $2);", [[products.id], [categories.id]])
+  # c.exec_params("INSERT INTO pc (product_id, category_id) = ($1, $2);", [[products.id], [categories.id]])
   
   c.close
   redirect "/products/#{params["id"]}"
@@ -102,12 +101,12 @@ get '/products/:id/edit' do
   c = PGconn.new(:host => "localhost", :dbname => dbname)
   @product = c.exec_params("SELECT * FROM products WHERE products.id = $1", [params["id"]]).first
   
-  @list_cat = c.exec_params("SELECT c.name FROM categories AS c 
+  @list_cat = c.exec_params("SELECT DISTINCT c.name FROM categories AS c 
     INNER JOIN prod_cat AS pc 
     ON c.id=pc.category_id 
     INNER JOIN products AS p 
     ON p.id=pc.product_id
-    WHERE pc.product_id = $1;", [params[:id]])
+    WHERE p.id = $1;", [params[:id]])
 
   @list_cat_avail = c.exec_params("SELECT DISTINCT c.name FROM categories AS c 
     INNER JOIN prod_cat AS pc 
