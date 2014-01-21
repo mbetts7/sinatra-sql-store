@@ -29,7 +29,7 @@ get '/products' do
   erb :products
 end
 
-#BETTS Get the index of categories
+#Get the index of categories
 get '/categories' do
   c = PGconn.new(:host => "localhost", :dbname => dbname)
 
@@ -44,12 +44,12 @@ get '/products/new' do
   erb :new_product
 end
 
-#BETTS Get the form for creating a new category
+#Get the form for creating a new category
 get '/categories/new' do
   erb :new_categories
 end
 
-# POST to create a new product
+#POST to create a new product
 post '/products' do
   c = PGconn.new(:host => "localhost", :dbname => dbname)
 
@@ -64,7 +64,7 @@ post '/products' do
   redirect "/products/#{new_product_id}"
 end
 
-#BETTS POST to create a new category
+#POST to create a new category
 post '/categories' do
   c = PGconn.new(:host => "localhost", :dbname => dbname)
 
